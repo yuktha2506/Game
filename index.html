@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Star Friends: Magical Island Adventure</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⭐</text></svg>">
+</head>
+<body>
+    <div id="gameContainer">
+        <!-- Main Game Canvas -->
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- In-Game HUD -->
+        <div id="hud">
+            <div class="hud-group">
+                <div class="hud-card">
+                    <span class="hud-star-icon">⭐</span>
+                    <span id="hudStars">0</span>
+                </div>
+                <div id="hudKey" class="hud-card" style="display: none; color: #F57F17;">
+                    <span>🔑</span>
+                </div>
+                <div class="hud-card" id="hudCompanions">
+                    💖 0
+                </div>
+            </div>
+
+            <div class="hud-group">
+                <button class="hud-btn" id="btnAudioToggle" title="Mute/Unmute Audio">🔊</button>
+                <button class="hud-btn" id="btnPause" title="Pause Game">⏸️</button>
+            </div>
+        </div>
+
+        <!-- Touch Controls for Tablet & Touchscreens -->
+        <div id="touchControls">
+            <div class="touch-dpad">
+                <button class="touch-btn" id="touchLeft">◀</button>
+                <button class="touch-btn" id="touchRight">▶</button>
+            </div>
+            <div class="touch-actions">
+                <button class="touch-btn dash-btn" id="touchDash" title="Rainbow Dash">⚡</button>
+                <button class="touch-btn jump-btn" id="touchJump" title="Jump / Flutter">🦘</button>
+            </div>
+        </div>
+
+        <!-- SCREEN: Title Menu -->
+        <div id="screenMenu" class="screen-overlay">
+            <div class="modal-card">
+                <h1 class="title-banner">⭐ Star Friends ⭐</h1>
+                <p class="subtitle">Magical Island Adventure</p>
+
+                <div style="margin: 20px 0;">
+                    <button class="btn-primary" id="btnStartAdventure">
+                        <span>🚀</span> Play Adventure!
+                    </button>
+                    <br>
+                    <button class="btn-secondary btn-blue" id="btnOpenCustomize">
+                        <span>✨</span> Dress Up Hero
+                    </button>
+                    <button class="btn-secondary btn-yellow" id="btnOpenTrophies">
+                        <span>📖</span> Sticker Book
+                    </button>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.7); border-radius: 20px; padding: 12px; font-size: 0.95rem; color: #546E7A; font-weight: 600;">
+                    🎮 <b>Controls:</b> Arrow Keys / WASD to Walk & Jump • Shift to Rainbow Dash!
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN: Character Dress Up / Customizer -->
+        <div id="screenCustomize" class="screen-overlay hidden">
+            <div class="modal-card" style="max-width: 600px;">
+                <h2 class="title-banner" style="font-size: 2.2rem;">✨ Dress Up Hero ✨</h2>
+
+                <div class="customizer-layout">
+                    <!-- Live Character Preview Canvas -->
+                    <canvas id="charPreviewCanvas" width="160" height="160"></canvas>
+
+                    <div class="custom-options">
+                        <!-- Hero Character Selector -->
+                        <div class="option-row">
+                            <span class="option-label">Hero:</span>
+                            <div class="btn-group">
+                                <button class="char-btn active" data-hero="bunny" title="Pip the Bunny (High Jumps)">🐰 Pip</button>
+                                <button class="char-btn" data-hero="cat" title="Mochi the Cat (Speed Dash)">🐱 Mochi</button>
+                                <button class="char-btn" data-hero="dragon" title="Sparky the Dragon (Float Glide)">🐲 Sparky</button>
+                            </div>
+                        </div>
+
+                        <!-- Color Palette Picker -->
+                        <div class="option-row">
+                            <span class="option-label">Color:</span>
+                            <div class="btn-group">
+                                <div class="color-dot active" data-color="pink" style="background: #FF80AB;" title="Blush Pink"></div>
+                                <div class="color-dot" data-color="blue" style="background: #80D8FF;" title="Sky Blue"></div>
+                                <div class="color-dot" data-color="mint" style="background: #B9F6CA;" title="Mint Green"></div>
+                                <div class="color-dot" data-color="gold" style="background: #FFE57F;" title="Sunshine Gold"></div>
+                                <div class="color-dot" data-color="purple" style="background: #EA80FC;" title="Magic Purple"></div>
+                            </div>
+                        </div>
+
+                        <!-- Hats & Accessories -->
+                        <div class="option-row">
+                            <span class="option-label">Hat:</span>
+                            <div class="btn-group" style="flex-wrap: wrap;">
+                                <button class="hat-btn active" data-hat="party" title="Party Cone">🎉</button>
+                                <button class="hat-btn" data-hat="crown" title="Royal Crown">👑</button>
+                                <button class="hat-btn" data-hat="cape" title="Super Hero Cape">🦸</button>
+                                <button class="hat-btn" data-hat="flower" title="Flower Daisy">🌸</button>
+                                <button class="hat-btn" data-hat="chef" title="Chef Hat">👨‍🍳</button>
+                                <button class="hat-btn" data-hat="star" title="Star Antenna">🌟</button>
+                                <button class="hat-btn" data-hat="none" title="No Hat">❌</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-primary" id="btnSaveCustomize">
+                    <span>💖</span> Let's Play!
+                </button>
+            </div>
+        </div>
+
+        <!-- SCREEN: Sticker / Trophy Book -->
+        <div id="screenTrophy" class="screen-overlay hidden">
+            <div class="modal-card" style="max-width: 620px;">
+                <h2 class="title-banner" style="font-size: 2.2rem;">📖 Sticker Album 📖</h2>
+                <p class="subtitle">Collect stars & rescue animal companions to earn stickers!</p>
+
+                <div class="trophy-grid" id="trophyGrid">
+                    <!-- Populated dynamically by game.js -->
+                </div>
+
+                <button class="btn-secondary btn-blue" id="btnCloseTrophies">
+                    <span>🔙</span> Back to Menu
+                </button>
+            </div>
+        </div>
+
+        <!-- SCREEN: Pause Menu -->
+        <div id="screenPause" class="screen-overlay hidden">
+            <div class="modal-card">
+                <h2 class="title-banner" style="font-size: 2.3rem;">⏸️ Game Paused</h2>
+                <div style="margin: 24px 0;">
+                    <button class="btn-primary" id="btnResumeGame">
+                        <span>▶️</span> Continue Playing
+                    </button>
+                    <br>
+                    <button class="btn-secondary btn-yellow" id="btnRestartLevel">
+                        <span>🔄</span> Restart Island
+                    </button>
+                    <br>
+                    <button class="btn-secondary btn-blue" id="btnPauseDressUp">
+                        <span>✨</span> Change Outfit
+                    </button>
+                    <br>
+                    <button class="btn-secondary" id="btnQuitToMenu">
+                        <span>🏠</span> Main Menu
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN: Level Victory Celebration -->
+        <div id="screenVictory" class="screen-overlay hidden">
+            <div class="modal-card">
+                <div style="font-size: 3.5rem; margin-bottom: -10px;">🏆</div>
+                <h2 class="title-banner" id="victoryTitle" style="font-size: 2.4rem;">Island Cleared! 🎉</h2>
+                <div id="victoryStarsCount" style="font-size: 1.4rem; font-weight: 700; color: #F57F17; margin: 10px 0;">
+                    ⭐ Stars Collected: 0
+                </div>
+                <div id="victoryFriendText" style="font-size: 1.25rem; font-weight: 700; color: #E91E63; margin-bottom: 20px;">
+                    💖 Rescued Friend!
+                </div>
+
+                <div>
+                    <button class="btn-primary" id="btnNextLevel">
+                        <span>🚀</span> Next Island!
+                    </button>
+                    <br>
+                    <button class="btn-secondary btn-blue" id="btnReplayLevel">
+                        <span>🔄</span> Play Again
+                    </button>
+                    <button class="btn-secondary btn-yellow" id="btnVictoryTrophies">
+                        <span>📖</span> View Stickers
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Scripts in Execution Order -->
+    <script src="src/audio.js"></script>
+    <script src="src/particles.js"></script>
+    <script src="src/characters.js"></script>
+    <script src="src/levels.js"></script>
+    <script src="src/physics.js"></script>
+    <script src="src/game.js"></script>
+
+    <!-- UI Interaction Glue -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Unlock Web Audio API on first user interaction
+            const unlockAudio = () => {
+                window.sound.ensureContext();
+                window.removeEventListener('pointerdown', unlockAudio);
+                window.removeEventListener('keydown', unlockAudio);
+            };
+            window.addEventListener('pointerdown', unlockAudio);
+            window.addEventListener('keydown', unlockAudio);
+
+            // Menu Buttons
+            document.getElementById('btnStartAdventure').addEventListener('click', () => {
+                window.sound.ensureContext();
+                window.game.startGame();
+            });
+
+            document.getElementById('btnOpenCustomize').addEventListener('click', () => {
+                window.game.setState('CUSTOMIZE');
+            });
+
+            document.getElementById('btnOpenTrophies').addEventListener('click', () => {
+                window.game.setState('TROPHY');
+            });
+
+            document.getElementById('btnSaveCustomize').addEventListener('click', () => {
+                window.game.startGame();
+            });
+
+            document.getElementById('btnCloseTrophies').addEventListener('click', () => {
+                window.game.setState('MENU');
+            });
+
+            // Pause & Audio Buttons
+            document.getElementById('btnPause').addEventListener('click', () => {
+                if (window.game.state === 'PLAY') window.game.setState('PAUSE');
+            });
+
+            document.getElementById('btnResumeGame').addEventListener('click', () => {
+                window.game.setState('PLAY');
+            });
+
+            document.getElementById('btnRestartLevel').addEventListener('click', () => {
+                window.game.initLevel(window.game.currentLevelIndex);
+                window.game.setState('PLAY');
+            });
+
+            document.getElementById('btnPauseDressUp').addEventListener('click', () => {
+                window.game.setState('CUSTOMIZE');
+            });
+
+            document.getElementById('btnQuitToMenu').addEventListener('click', () => {
+                window.game.setState('MENU');
+            });
+
+            document.getElementById('btnAudioToggle').addEventListener('click', () => {
+                const isMuted = window.sound.toggleMute();
+                document.getElementById('btnAudioToggle').innerText = isMuted ? '🔇' : '🔊';
+            });
+
+            // Victory Buttons
+            document.getElementById('btnNextLevel').addEventListener('click', () => {
+                const nextIdx = (window.game.currentLevelIndex + 1) % window.levelManager.levels.length;
+                window.game.initLevel(nextIdx);
+                window.game.setState('PLAY');
+            });
+
+            document.getElementById('btnReplayLevel').addEventListener('click', () => {
+                window.game.initLevel(window.game.currentLevelIndex);
+                window.game.setState('PLAY');
+            });
+
+            document.getElementById('btnVictoryTrophies').addEventListener('click', () => {
+                window.game.setState('TROPHY');
+            });
+
+            // Character Customization click handlers
+            document.querySelectorAll('.char-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const hero = e.currentTarget.dataset.hero;
+                    window.game.selectHero(hero);
+                });
+            });
+
+            document.querySelectorAll('.color-dot').forEach(dot => {
+                dot.addEventListener('click', (e) => {
+                    const col = e.currentTarget.dataset.color;
+                    window.game.selectColor(col);
+                });
+            });
+
+            document.querySelectorAll('.hat-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const hat = e.currentTarget.dataset.hat;
+                    window.game.selectHat(hat);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
