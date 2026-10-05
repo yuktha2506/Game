@@ -1,6 +1,3 @@
-// Character Renderer and Animation Engine for Star Friends
-// Procedural vector graphics with squash-and-stretch, blinking, and accessories!
-
 class CharacterRenderer {
     constructor() {
         this.palettes = {
