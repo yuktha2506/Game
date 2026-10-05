@@ -1,6 +1,3 @@
-// Web Audio API Sound and Music Synthesizer for Star Friends
-// 100% Procedural - Zero external audio file dependencies!
-
 class SoundEngine {
     constructor() {
         this.ctx = null;
