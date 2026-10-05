@@ -1,6 +1,3 @@
-// Particle and Visual Juice System for Star Friends
-// Confetti, Sparkles, Rainbows, Hearts, and Dust Puffs!
-
 class ParticleSystem {
     constructor() {
         this.particles = [];
