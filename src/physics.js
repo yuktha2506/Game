@@ -1,6 +1,3 @@
-// Physics, Controls, and Player Controller for Star Friends
-// Designed for juicy, forgiving, and delightful platforming!
-
 class PhysicsEngine {
     constructor() {
         this.gravity = 1450;
