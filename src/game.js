@@ -1,5 +1,3 @@
-// Main Game Controller, Camera, State Manager, and Event Loop for Star Friends
-
 class StarFriendsGame {
     constructor() {
         this.canvas = document.getElementById('gameCanvas');
