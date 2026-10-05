@@ -1,5 +1,3 @@
-// Level Layouts, World Themes, and Environmental Renderer for Star Friends
-
 class LevelManager {
     constructor() {
         this.levels = [
